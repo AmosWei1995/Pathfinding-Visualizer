@@ -1,0 +1,86 @@
+{
+  "width": 49,
+  "height": 26,
+  "start": [
+    13,
+    12
+  ],
+  "goal": [
+    13,
+    35
+  ],
+  "cells": [
+    {
+      "row": 12,
+      "col": 46,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 10,
+      "col": 5,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 13,
+      "col": 19,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 12,
+      "col": 35,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 12,
+      "col": 14,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 18,
+      "col": 47,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 15,
+      "col": 9,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 7,
+      "col": 3,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 10,
+      "col": 23,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 14,
+      "col": 27,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 11,
+      "col": 6,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 2,
+      "col": 3,
+      "value": "#",
+      "cost": -1
+    }
+  ]
+}

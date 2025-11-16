@@ -1,0 +1,170 @@
+{
+  "width": 49,
+  "height": 26,
+  "start": [
+    13,
+    12
+  ],
+  "goal": [
+    13,
+    35
+  ],
+  "cells": [
+    {
+      "row": 12,
+      "col": 7,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 12,
+      "col": 8,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 12,
+      "col": 9,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 12,
+      "col": 10,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 12,
+      "col": 11,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 12,
+      "col": 12,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 1,
+      "col": 2,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 1,
+      "col": 3,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 1,
+      "col": 4,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 1,
+      "col": 5,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 1,
+      "col": 6,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 1,
+      "col": 7,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 11,
+      "col": 26,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 11,
+      "col": 27,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 11,
+      "col": 28,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 20,
+      "col": 21,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 20,
+      "col": 22,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 20,
+      "col": 23,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 20,
+      "col": 24,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 20,
+      "col": 25,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 20,
+      "col": 26,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 20,
+      "col": 27,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 10,
+      "col": 12,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 10,
+      "col": 13,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 10,
+      "col": 14,
+      "value": "#",
+      "cost": -1
+    },
+    {
+      "row": 10,
+      "col": 15,
+      "value": "#",
+      "cost": -1
+    }
+  ]
+}
