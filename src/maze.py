@@ -1,5 +1,8 @@
 from typing import Optional
 import pygame
+import json
+import os
+from datetime import datetime
 
 
 from .generate import GenerationCallback, MazeGenerator
@@ -518,3 +521,115 @@ class Maze:
             image_rect = GOAL.get_rect(
                 center=(x + CELL_SIZE // 2, y + CELL_SIZE // 2))
             self.surface.blit(GOAL, image_rect)
+
+    def save_map(self, filename: str | None = None) -> str:
+        """Save current map to a JSON file
+
+        Args:
+            filename (str | None): Name for the map file. If None, auto-generate with timestamp.
+
+        Returns:
+            str: Path to the saved file
+        """
+        # Create maps directory if it doesn't exist
+        maps_dir = "maps"
+        if not os.path.exists(maps_dir):
+            os.makedirs(maps_dir)
+
+        # Generate filename if not provided
+        if filename is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"map_{timestamp}.json"
+        elif not filename.endswith(".json"):
+            filename += ".json"
+
+        # Prepare map data
+        map_data = {
+            "width": self.width,
+            "height": self.height,
+            "start": self.start,
+            "goal": self.goal,
+            "cells": []
+        }
+
+        # Save only non-default cells (walls, weighted nodes, etc.)
+        for i in range(self.height):
+            for j in range(self.width):
+                node = self.maze[i][j]
+                # Skip default empty cells and start/goal (already saved)
+                if node.value not in ("1", "A", "B", "V", "*"):
+                    map_data["cells"].append({
+                        "row": i,
+                        "col": j,
+                        "value": node.value,
+                        "cost": node.cost
+                    })
+
+        # Save to file
+        filepath = os.path.join(maps_dir, filename)
+        with open(filepath, 'w') as f:
+            json.dump(map_data, f, indent=2)
+
+        return filepath
+
+    def load_map(self, filepath: str) -> bool:
+        """Load map from a JSON file
+
+        Args:
+            filepath (str): Path to the map file
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            with open(filepath, 'r') as f:
+                map_data = json.load(f)
+
+            # Verify dimensions match
+            if map_data["width"] != self.width or map_data["height"] != self.height:
+                print(f"Warning: Map dimensions ({map_data['width']}x{map_data['height']}) "
+                      f"don't match current maze ({self.width}x{self.height})")
+                return False
+
+            # Clear the board first
+            self.clear_board()
+
+            # Set start and goal positions
+            self.start = tuple(map_data["start"])
+            self.goal = tuple(map_data["goal"])
+            self.set_cell(self.start, "A", forced=True)
+            self.set_cell(self.goal, "B", forced=True)
+
+            # Load all cells
+            for cell_data in map_data["cells"]:
+                row = cell_data["row"]
+                col = cell_data["col"]
+                value = cell_data["value"]
+                self.set_cell((row, col), value)
+
+            return True
+
+        except FileNotFoundError:
+            print(f"Error: Map file '{filepath}' not found")
+            return False
+        except json.JSONDecodeError:
+            print(f"Error: Invalid JSON in map file '{filepath}'")
+            return False
+        except Exception as e:
+            print(f"Error loading map: {e}")
+            return False
+
+    @staticmethod
+    def get_saved_maps() -> list[str]:
+        """Get list of saved map files
+
+        Returns:
+            list[str]: List of map filenames
+        """
+        maps_dir = "maps"
+        if not os.path.exists(maps_dir):
+            return []
+
+        map_files = [f for f in os.listdir(maps_dir) if f.endswith('.json')]
+        map_files.sort(reverse=True)  # Most recent first
+        return map_files

@@ -159,6 +159,7 @@ class Menu(Widget):
         self.children = children
         self.clicked = False
         self.selected: Widget | None = None
+        self.button_was_pressed = False  # Track button state to prevent multiple toggles
 
         self.height = sum(child.rect.height for child in children)
         self.width = max(child.rect.width for child in children)
@@ -203,8 +204,13 @@ class Menu(Widget):
         clicked = self.button.draw()
         self.selected = None
 
-        if clicked:
-            self.clicked = True
+        # Only toggle when button is newly clicked (not held down)
+        # This prevents multiple toggles during a single click
+        if clicked and not self.button_was_pressed:
+            self.clicked = not self.clicked
+            self.button_was_pressed = True
+        elif not clicked:
+            self.button_was_pressed = False
 
         if not self.clicked:
             return False
@@ -224,6 +230,7 @@ class Menu(Widget):
             if child.draw():
                 self.selected = child
                 self.clicked = False
+                self.button_was_pressed = False  # Reset on selection
                 action = True
 
         return action

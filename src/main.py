@@ -57,6 +57,7 @@ title = Label(
 )
 title.rect.centery = top.centery
 
+
 # Instantiate Maze and Animator
 state = State()
 maze = Maze(surface=WINDOW)
@@ -300,9 +301,111 @@ clear_btn = Button(
 clear_btn.rect.centery = top.centery
 clear_btn.rect.right = WIDTH - 20
 
+# Second row for map management buttons (below the top bar)
+# Button instance for Save Map button
+save_map_btn = Button(
+    "Save Map", 0, 0,
+    background_color=pygame.Color(*GREEN),
+    foreground_color=pygame.Color(*WHITE),
+    padding=6, font_size=18, outline=False,
+    surface=WINDOW,
+)
+save_map_btn.rect.top = top.bottom + 10
+save_map_btn.rect.right = WIDTH - 20
+
+# Button instance for Load Map button
+load_map_btn = Button(
+    "Load Map", 0, 0,
+    background_color=pygame.Color(*BLUE_2),
+    foreground_color=pygame.Color(*WHITE),
+    padding=6, font_size=18, outline=False,
+    surface=WINDOW,
+)
+load_map_btn.rect.top = top.bottom + 10
+load_map_btn.rect.right = save_map_btn.rect.left - 10
+
+# Load map menu (will be created dynamically)
+load_map_menu = None
+load_map_btn_was_pressed = False  # Track button state to prevent multiple clicks
+load_map_scroll_offset = 0  # Track scroll position for menu
+
+
+def create_load_map_menu():
+    """Create load map menu dynamically based on saved maps with scrolling support"""
+    global load_map_scroll_offset
+
+    saved_maps = Maze.get_saved_maps()
+    if not saved_maps:
+        return None
+
+    # Calculate how many items can fit on screen
+    max_menu_height = HEIGHT - load_map_btn.rect.bottom - 50  # Leave 50px margin
+    item_height = 28  # Height per item with smaller font
+    max_visible_items = max(10, int(max_menu_height / item_height))
+
+    # Ensure we have enough items to display
+    if len(saved_maps) <= max_visible_items:
+        # If all maps fit, show them all without scrolling
+        load_map_scroll_offset = 0
+        visible_maps = saved_maps
+        start_idx = 0
+        end_idx = len(saved_maps)
+    else:
+        # Clamp scroll offset to valid range
+        max_scroll = len(saved_maps) - max_visible_items
+        load_map_scroll_offset = max(0, min(load_map_scroll_offset, max_scroll))
+
+        # Determine which items to show based on scroll offset
+        start_idx = load_map_scroll_offset
+        end_idx = start_idx + max_visible_items
+        visible_maps = saved_maps[start_idx:end_idx]
+
+    load_menu_children = []
+
+    # Create menu items for visible maps only
+    for i, map_file in enumerate(visible_maps):
+        load_menu_children.append(
+            Button(
+                surface=WINDOW,
+                text=map_file.replace('.json', ''),
+                x=load_map_btn.rect.x - 40,
+                y=load_map_btn.rect.bottom + i * item_height,
+                background_color=pygame.Color(*DARK_BLUE),
+                foreground_color=pygame.Color(*WHITE),
+                padding=3,  # Compact padding
+                font_size=14,  # Smaller font
+                outline=False
+            )
+        )
+
+    # Add scroll indicator if there are more items than can be displayed
+    if len(saved_maps) > max_visible_items:
+        indicator_text = f"↕ {start_idx + 1}-{end_idx} of {len(saved_maps)}"
+        load_menu_children.append(
+            Button(
+                surface=WINDOW,
+                text=indicator_text,
+                x=load_map_btn.rect.x - 40,
+                y=load_map_btn.rect.bottom + len(visible_maps) * item_height,
+                background_color=pygame.Color(*GRAY),
+                foreground_color=pygame.Color(*DARK),
+                padding=2,
+                font_size=11,
+                outline=False
+            )
+        )
+
+    return Menu(
+        surface=WINDOW,
+        button=load_map_btn,
+        children=load_menu_children
+    )
+
 
 def main() -> None:
     """Start here"""
+    global load_map_menu, load_map_btn_was_pressed, load_map_scroll_offset
+    
     state.label = Label(
         "Choose an algorithm", "center", 0,
         background_color=pygame.Color(*WHITE),
@@ -340,6 +443,56 @@ def main() -> None:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+            # Handle text input for map naming
+            if state.saving_map:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        # Save the map with the input name
+                        if state.map_name_input.strip():
+                            filepath = maze.save_map(state.map_name_input.strip())
+                            print(f"Map saved to: {filepath}")
+                        else:
+                            # Use default name if empty
+                            filepath = maze.save_map()
+                            print(f"Map saved to: {filepath}")
+                        state.saving_map = False
+                        state.map_name_input = ""
+                        state.overlay = False
+                        state.need_update = True
+                    elif event.key == pygame.K_ESCAPE:
+                        # Cancel saving
+                        state.saving_map = False
+                        state.map_name_input = ""
+                        state.overlay = False
+                        state.need_update = True
+                    elif event.key == pygame.K_BACKSPACE:
+                        # Remove last character
+                        state.map_name_input = state.map_name_input[:-1]
+                        state.need_update = True
+                    elif len(state.map_name_input) < 30:  # Limit name length
+                        # Add character if it's valid for filename
+                        if event.unicode.isprintable() and event.unicode not in '/\\:*?"<>|':
+                            state.map_name_input += event.unicode
+                            state.need_update = True
+                continue  # Skip other event handling while in input mode
+
+            # Handle mouse wheel for scrolling load map menu
+            if event.type == pygame.MOUSEWHEEL and load_map_menu is not None:
+                global load_map_scroll_offset
+                saved_maps = Maze.get_saved_maps()
+                max_menu_height = HEIGHT - load_map_btn.rect.bottom - 50
+                item_height = 28
+                max_visible_items = max(10, int(max_menu_height / item_height))
+                max_scroll = max(0, len(saved_maps) - max_visible_items)
+
+                # Scroll up/down (event.y is positive for scroll up, negative for down)
+                load_map_scroll_offset -= event.y
+                load_map_scroll_offset = max(0, min(load_map_scroll_offset, max_scroll))
+
+                # Recreate menu with new scroll position
+                load_map_menu = create_load_map_menu()
+                state.need_update = True
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if state.overlay:
@@ -624,6 +777,49 @@ def draw() -> None:
         state.done_visualising = False
         state.need_update = True
 
+    if save_map_btn.draw() and not maze.animator.animating:
+        # Start map naming input mode
+        state.saving_map = True
+        state.map_name_input = ""
+        state.overlay = True
+        state.need_update = True
+
+    # Handle Load Map menu
+    global load_map_menu, load_map_btn_was_pressed, load_map_scroll_offset
+
+    # If menu doesn't exist, draw button separately to detect clicks
+    if load_map_menu is None:
+        btn_clicked = load_map_btn.draw()
+        # Only create menu on new click (not when button is held down)
+        if btn_clicked and not load_map_btn_was_pressed and not maze.animator.animating:
+            load_map_menu = create_load_map_menu()
+            if not load_map_menu:
+                print("No saved maps found")
+            load_map_btn_was_pressed = True
+        elif not btn_clicked:
+            load_map_btn_was_pressed = False
+    # If menu exists, use its draw method (which will draw the button)
+    elif not maze.animator.animating:
+        if load_map_menu.draw() or load_map_menu.clicked:
+            state.overlay = True
+            if load_map_menu.selected:
+                filepath = f"maps/{load_map_menu.selected.text}.json"
+                if maze.load_map(filepath):
+                    print(f"Map loaded from: {filepath}")
+                    state.done_visualising = False
+                    state.need_update = True
+                # Menu will auto-close after selection
+                load_map_menu = None
+                load_map_btn_was_pressed = False  # Reset button state
+                load_map_scroll_offset = 0  # Reset scroll position
+                state.overlay = False
+        elif not load_map_menu.clicked:
+            # Menu was closed by clicking button again
+            load_map_menu = None
+            load_map_btn_was_pressed = False  # Reset button state
+            load_map_scroll_offset = 0  # Reset scroll position
+            state.overlay = False
+
     if (comapre_menu.draw() or comapre_menu.clicked) \
             and not animator.animating:
         state.overlay = True
@@ -685,6 +881,50 @@ def draw() -> None:
         if state.results_popup.draw():
             state.results_popup = None
             state.overlay = False
+
+    # Draw map name input popup
+    if state.saving_map:
+        state.overlay = True
+        # Draw semi-transparent background
+        overlay_surface = pygame.Surface((WIDTH, HEIGHT))
+        overlay_surface.set_alpha(128)
+        overlay_surface.fill((0, 0, 0))
+        WINDOW.blit(overlay_surface, (0, 0))
+
+        # Draw input box
+        box_width = 500
+        box_height = 200
+        box_x = (WIDTH - box_width) // 2
+        box_y = (HEIGHT - box_height) // 2
+
+        # Background
+        pygame.draw.rect(WINDOW, WHITE, (box_x, box_y, box_width, box_height), border_radius=10)
+        pygame.draw.rect(WINDOW, DARK_BLUE, (box_x, box_y, box_width, box_height), width=3, border_radius=10)
+
+        # Title
+        title_text = FONT_18.render("Save Map", True, DARK)
+        title_rect = title_text.get_rect(center=(WIDTH // 2, box_y + 30))
+        WINDOW.blit(title_text, title_rect)
+
+        # Instruction
+        instruction = FONT_18.render("Enter map name (or leave empty for auto-name):", True, DARK)
+        instruction_rect = instruction.get_rect(center=(WIDTH // 2, box_y + 70))
+        WINDOW.blit(instruction, instruction_rect)
+
+        # Input field
+        input_box = pygame.Rect(box_x + 30, box_y + 100, box_width - 60, 40)
+        pygame.draw.rect(WINDOW, WHITE, input_box)
+        pygame.draw.rect(WINDOW, BLUE_2, input_box, width=2)
+
+        # Input text
+        input_text = FONT_18.render(state.map_name_input + "|", True, DARK)
+        input_text_rect = input_text.get_rect(midleft=(input_box.x + 10, input_box.centery))
+        WINDOW.blit(input_text, input_text_rect)
+
+        # Help text
+        help_text = FONT_18.render("Press ENTER to save, ESC to cancel", True, GRAY)
+        help_rect = help_text.get_rect(center=(WIDTH // 2, box_y + 160))
+        WINDOW.blit(help_text, help_rect)
 
 
 def run_single(idx: int) -> None:

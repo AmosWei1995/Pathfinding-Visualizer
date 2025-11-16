@@ -4,7 +4,7 @@ from src.widgets import Label, Popup
 
 class State:
     __instance = None
-    
+
     overlay: bool = False
     label: Label
     speed_label: Label
@@ -13,6 +13,8 @@ class State:
     results: dict[str, dict[str, float]]
     run_all_mazes = False
     results_popup: Popup | None = None
+    saving_map: bool = False
+    map_name_input: str = ""
 
     def __new__(cls):
         if State.__instance is None:
