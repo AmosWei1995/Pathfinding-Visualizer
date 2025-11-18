@@ -11,7 +11,9 @@ class State:
     done_visualising: bool
     need_update: bool
     results: dict[str, dict[str, float]]
-    run_all_mazes = False
+    run_all_saved_maps = False
+    saved_map_total = 0
+    completed_saved_maps = 0
     results_popup: Popup | None = None
     saving_map: bool = False
     map_name_input: str = ""
