@@ -44,6 +44,7 @@ from .constants import (
 # Paths for saving run results
 BASE_DIR = Path(__file__).resolve().parent.parent
 RESULTS_FILE = BASE_DIR / "run_results.csv"
+SCREENSHOTS_DIR = BASE_DIR / "screenshots"
 
 # Initialize PyGame
 pygame.init()
@@ -380,6 +381,25 @@ def save_run_result(algo_name: str, solution, map_name: str | None) -> None:
             path_cost,
             f"{solution.time:.2f}",
         ])
+
+
+def save_screenshot(algo_name: str, map_name: str | None) -> None:
+    """Save a screenshot of the current window."""
+    safe_map = (map_name or "unspecified").replace(".json", "")
+    safe_algo = algo_name.replace(" ", "_")
+
+    def sanitize(value: str) -> str:
+        return "".join(
+            c if c.isalnum() or c in ("-", "_") else "_"
+            for c in value
+        )
+
+    filename = f"{sanitize(safe_map)}-{sanitize(safe_algo)}.png"
+    SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
+    filepath = SCREENSHOTS_DIR / filename
+    draw()
+    pygame.display.update()
+    pygame.image.save(WINDOW, filepath.as_posix())
 
 
 def create_load_map_menu():
@@ -799,10 +819,6 @@ def draw() -> None:
             image_rect = GOAL.get_rect(center=(65, y + 15))
             WINDOW.blit(GOAL, image_rect)
 
-    # Draw algo label
-    state.label.draw()
-    state.speed_label.draw()
-
     maze.draw()
 
     # Handle buttons
@@ -908,6 +924,7 @@ def draw() -> None:
 
         if comapre_menu.selected:
             state.results = {}
+            state.run_all_mode = "saved" if comapre_menu.selected.text == "Different Mazes" else "current"
             run_all(0)
 
     if (generate_menu.draw() or generate_menu.clicked) \
@@ -951,6 +968,10 @@ def draw() -> None:
                 surface=WINDOW,
             )
             state.label.rect.bottom = HEADER_HEIGHT - 10
+
+    # Draw labels last to keep them on top of other UI elements
+    state.speed_label.draw()
+    state.label.draw()
 
     if state.results_popup:
         state.overlay = True
@@ -1030,7 +1051,9 @@ def run_single(idx: int) -> None:
         )
         state.label.rect.bottom = HEADER_HEIGHT - 10
         state.overlay = False
-        save_run_result(text, solution, getattr(maze, "current_map_name", None))
+        map_name = getattr(maze, "current_map_name", None)
+        save_run_result(text, solution, map_name)
+        save_screenshot(text, map_name)
 
     maze.visualize(solution=solution, after_animation=callback)
 
@@ -1050,24 +1073,34 @@ def run_all(
     saved_maps: list[str] | None = None
 ) -> None:
     """Run every algorithm on each saved map sequentially."""
-    if saved_maps is None:
-        saved_maps = Maze.get_saved_maps()
-        if not saved_maps:
-            state.label = Label(
-                "No saved maps found", "center", 0,
-                background_color=pygame.Color(*WHITE),
-                foreground_color=pygame.Color(*DARK),
-                padding=6, font_size=20, outline=False,
-                surface=WINDOW,
-            )
-            state.label.rect.bottom = HEADER_HEIGHT - 10
-            state.overlay = False
-            return
+    running_saved_maps = state.run_all_mode == "saved"
 
-        state.results = {}
-        state.run_all_saved_maps = True
-        state.saved_map_total = len(saved_maps)
-        state.completed_saved_maps = 0
+    if running_saved_maps:
+        if saved_maps is None:
+            saved_maps = Maze.get_saved_maps()
+            if not saved_maps:
+                state.label = Label(
+                    "No saved maps found", "center", 0,
+                    background_color=pygame.Color(*WHITE),
+                    foreground_color=pygame.Color(*DARK),
+                    padding=6, font_size=20, outline=False,
+                    surface=WINDOW,
+                )
+                state.label.rect.bottom = HEADER_HEIGHT - 10
+                state.overlay = False
+                return
+
+            state.results = {}
+            state.run_all_saved_maps = True
+            state.saved_map_total = len(saved_maps)
+            state.completed_saved_maps = 0
+    else:
+        saved_maps = [maze.current_map_name or "current_maze"]
+        if algo_idx == 0 and map_idx == 0:
+            state.results = {}
+            state.run_all_saved_maps = False
+            state.saved_map_total = 1
+            state.completed_saved_maps = 1
 
     if map_idx >= len(saved_maps):
         map_count = max(state.completed_saved_maps, 1)
@@ -1099,7 +1132,7 @@ def run_all(
     current_map = saved_maps[map_idx]
     filepath = f"maps/{current_map}"
 
-    if algo_idx == 0:
+    if running_saved_maps and algo_idx == 0:
         if not maze.load_map(filepath):
             print(f"Failed to load map: {filepath}")
             run_all(0, map_idx + 1, saved_maps)
@@ -1113,7 +1146,24 @@ def run_all(
     display_map = current_map.replace(".json", "")
 
     def callback():
-        save_run_result(text, solution, getattr(maze, "current_map_name", None))
+        map_name = getattr(maze, "current_map_name", None)
+        path_cost = solution.path_cost if solution.path_cost else max(solution.path_length - 1, 0)
+        path_found = "Yes" if solution.path_length > 0 else "No"
+        state.label = Label(
+            f"{text} on {display_map} \ntook {solution.explored_length-1} steps,\n"
+            f"path length {solution.path_length-1},\n"
+            f"path cost {path_cost},\n"
+            f"path found {path_found},\n"
+            f"time taken {solution.time:.2f}ms", "center", 0,
+            background_color=pygame.Color(*WHITE),
+            foreground_color=pygame.Color(*DARK),
+            padding=6, font_size=20, outline=False,
+            surface=WINDOW,
+        )
+        state.label.rect.bottom = HEADER_HEIGHT - 10
+
+        save_run_result(text, solution, map_name)
+        save_screenshot(text, map_name)
         if algo_idx + 1 < len(algo_menu.children):
             run_all(algo_idx + 1, map_idx, saved_maps)
         else:
