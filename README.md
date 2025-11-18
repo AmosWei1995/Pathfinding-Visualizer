@@ -66,14 +66,54 @@ The following pathfinding algorithms are currently supported in this visualizer:
 Each algorithm uses a different approach to finding the shortest path between two points on a graph. Choose the one that best fits your use case and watch it in action.
 
 ## Requirements
-* Python 3.10 and above: You can download the latest version of Python from the official website (https://www.python.org/downloads/).
-* Pygame: You can install Pygame by running 'pip install pygame' in your terminal.
+- **Python 3.10 or newer** (Windows, macOS, or Linux). Verify with `python3 --version`.
+- **pip** (or another Python package manager) capable of installing wheel distributions.
+- **Pygame 2.6.1** (handled automatically when installing the requirements file).
+- Optional but recommended: a virtual environment such as `venv` or `conda` to isolate dependencies.
+
+Install the dependencies with:
+
+```bash
+python3 -m venv .venv          # optional but recommended
+source .venv/bin/activate      # on Windows use: .venv\Scripts\activate
+pip install -r requirements.txt
+```
 
 ## Usage
 - Download the project repository to your local machine. 
 - Navigate to the project directory.
 - Run `python3 run.pyw` if on Linux or Mac
 - Run `python run.pyw` if on Windows
+
+## Deployment / Running Locally
+The project does not require a server or database; deploying it essentially means preparing a runnable environment on the target machine. A typical setup looks like this:
+
+1. **Clone or copy the repository**
+   ```bash
+   git clone https://github.com/<your-user>/Pathfinding-Visualizer.git
+   cd Pathfinding-Visualizer
+   ```
+2. **Create a virtual environment (optional but recommended)**
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate      # Windows: .venv\Scripts\activate
+   ```
+3. **Install runtime dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. **Configure display variables (Linux only)** if you plan to run it headless or through SSH. For local desktops this step is unnecessary.
+5. **Launch the visualizer**
+   ```bash
+   python3 run.pyw    # macOS / Linux
+   python run.pyw     # Windows
+   ```
+6. **Optional packaging** – If you need a standalone executable for non-technical users, tools like `pyinstaller` work well:
+   ```bash
+   pip install pyinstaller
+   pyinstaller --onefile run.pyw
+   ```
+   The resulting binary can be distributed together with the `assets/` and `maps/` folders so that screenshots, fonts, and saved mazes remain available.
 
 ## Command Line Arguments
 1. `--cell-size`
