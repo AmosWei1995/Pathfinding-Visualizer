@@ -61,6 +61,7 @@ class Maze:
 
         self.width = MAZE_WIDTH // CELL_SIZE
         self.height = MAZE_HEIGHT // CELL_SIZE
+        self.current_map_name = "default"
 
         self.maze = [[MazeNode("1", (rowIdx, colIdx), 1)
                       for colIdx in range(self.width)]
@@ -570,6 +571,9 @@ class Maze:
         with open(filepath, 'w') as f:
             json.dump(map_data, f, indent=2)
 
+        base = os.path.splitext(os.path.basename(filename))[0]
+        self.current_map_name = base
+
         return filepath
 
     def load_map(self, filepath: str) -> bool:
@@ -607,6 +611,7 @@ class Maze:
                 value = cell_data["value"]
                 self.set_cell((row, col), value)
 
+            self.current_map_name = os.path.splitext(os.path.basename(filepath))[0]
             return True
 
         except FileNotFoundError:

@@ -1,0 +1,2 @@
+timestamp,map_name,algorithm,path_found,steps_explored,path_length,path_cost,time_ms
+2025-11-18T12:23:10,sparse_2_clusters,A* Search,yes,23,23,23,0.19
