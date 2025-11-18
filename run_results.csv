@@ -1,102 +1,101 @@
 timestamp,map_name,algorithm,path_found,steps_explored,path_length,path_cost,time_ms
-2025-11-18T12:23:10,sparse_2_clusters,A* Search,yes,23,23,23,0.19
-2025-11-18T12:34:09,weighted_5_highcost_barrier,A* Search,yes,137,23,45,0.64
-2025-11-18T12:34:13,weighted_5_highcost_barrier,Dijkstra's Search,yes,322,23,45,0.98
-2025-11-18T12:34:15,weighted_5_highcost_barrier,Greedy Best First Search,yes,23,23,45,0.08
-2025-11-18T12:34:22,weighted_5_highcost_barrier,Breadth First Search,yes,755,23,45,2.33
-2025-11-18T12:34:24,weighted_5_highcost_barrier,Depth First Search,yes,23,23,45,0.09
-2025-11-18T12:34:29,weighted_4_mixed,A* Search,yes,491,33,62,2.04
-2025-11-18T12:34:35,weighted_4_mixed,Dijkstra's Search,yes,748,33,62,3.37
-2025-11-18T12:34:38,weighted_4_mixed,Greedy Best First Search,yes,37,29,74,0.10
-2025-11-18T12:34:44,weighted_4_mixed,Breadth First Search,yes,672,29,89,1.53
-2025-11-18T12:34:53,weighted_4_mixed,Depth First Search,yes,390,195,604,2.48
-2025-11-18T12:34:58,weighted_3_regional,A* Search,yes,395,29,56,1.64
-2025-11-18T12:35:04,weighted_3_regional,Dijkstra's Search,yes,829,29,56,4.36
-2025-11-18T12:35:07,weighted_3_regional,Greedy Best First Search,yes,23,23,69,0.08
-2025-11-18T12:35:13,weighted_3_regional,Breadth First Search,yes,762,23,69,2.65
-2025-11-18T12:35:15,weighted_3_regional,Depth First Search,yes,23,23,69,0.10
-2025-11-18T12:35:21,weighted_2_gradient,A* Search,yes,675,27,61,3.67
-2025-11-18T12:35:28,weighted_2_gradient,Dijkstra's Search,yes,936,27,61,5.53
-2025-11-18T12:35:31,weighted_2_gradient,Greedy Best First Search,yes,23,23,71,0.08
-2025-11-18T12:35:37,weighted_2_gradient,Breadth First Search,yes,762,23,71,2.50
-2025-11-18T12:35:39,weighted_2_gradient,Depth First Search,yes,23,23,71,0.11
-2025-11-18T12:35:43,weighted_1_random,A* Search,yes,228,29,41,0.83
-2025-11-18T12:35:50,weighted_1_random,Dijkstra's Search,yes,839,29,41,5.21
-2025-11-18T12:35:52,weighted_1_random,Greedy Best First Search,yes,23,23,67,0.11
-2025-11-18T12:35:58,weighted_1_random,Breadth First Search,yes,762,23,67,2.55
-2025-11-18T12:36:01,weighted_1_random,Depth First Search,yes,23,23,67,0.13
-2025-11-18T12:36:03,sparse_5_wide_spread,A* Search,yes,23,23,23,0.11
-2025-11-18T12:36:09,sparse_5_wide_spread,Dijkstra's Search,yes,729,23,23,3.50
-2025-11-18T12:36:11,sparse_5_wide_spread,Greedy Best First Search,yes,23,23,23,0.13
-2025-11-18T12:36:18,sparse_5_wide_spread,Breadth First Search,yes,743,23,23,3.05
-2025-11-18T12:36:20,sparse_5_wide_spread,Depth First Search,yes,23,23,23,0.21
-2025-11-18T12:36:22,sparse_4_large_blocks,A* Search,yes,23,23,23,0.20
-2025-11-18T12:36:28,sparse_4_large_blocks,Dijkstra's Search,yes,716,23,23,6.04
-2025-11-18T12:36:31,sparse_4_large_blocks,Greedy Best First Search,yes,23,23,23,0.15
-2025-11-18T12:36:37,sparse_4_large_blocks,Breadth First Search,yes,730,23,23,4.18
-2025-11-18T12:36:39,sparse_4_large_blocks,Depth First Search,yes,23,23,23,0.19
-2025-11-18T12:36:42,sparse_3_short_walls,A* Search,yes,23,23,23,0.20
-2025-11-18T12:36:47,sparse_3_short_walls,Dijkstra's Search,yes,720,23,23,6.36
-2025-11-18T12:36:50,sparse_3_short_walls,Greedy Best First Search,yes,23,23,23,0.15
-2025-11-18T12:36:56,sparse_3_short_walls,Breadth First Search,yes,734,23,23,4.06
-2025-11-18T12:36:58,sparse_3_short_walls,Depth First Search,yes,23,23,23,0.21
-2025-11-18T12:37:01,sparse_2_clusters,A* Search,yes,23,23,23,0.19
-2025-11-18T12:37:07,sparse_2_clusters,Dijkstra's Search,yes,740,23,23,6.54
-2025-11-18T12:37:09,sparse_2_clusters,Greedy Best First Search,yes,23,23,23,0.15
-2025-11-18T12:37:15,sparse_2_clusters,Breadth First Search,yes,754,23,23,4.72
-2025-11-18T12:37:18,sparse_2_clusters,Depth First Search,yes,23,23,23,0.19
-2025-11-18T12:37:20,sparse_1_scattered,A* Search,yes,25,25,25,0.19
-2025-11-18T12:37:26,sparse_1_scattered,Dijkstra's Search,yes,791,25,25,7.33
-2025-11-18T12:37:29,sparse_1_scattered,Greedy Best First Search,yes,25,25,25,0.16
-2025-11-18T12:37:35,sparse_1_scattered,Breadth First Search,yes,803,25,25,4.50
-2025-11-18T12:37:44,sparse_1_scattered,Depth First Search,yes,510,157,157,5.53
-2025-11-18T12:37:51,maze_5_recursive_division,A* Search,yes,444,93,93,2.81
-2025-11-18T12:37:58,maze_5_recursive_division,Dijkstra's Search,yes,544,93,93,3.92
-2025-11-18T12:38:04,maze_5_recursive_division,Greedy Best First Search,yes,255,101,101,1.51
-2025-11-18T12:38:11,maze_5_recursive_division,Breadth First Search,yes,544,93,93,1.51
-2025-11-18T12:38:22,maze_5_recursive_division,Depth First Search,yes,502,217,217,4.16
-2025-11-18T12:38:25,maze_4_branching,A* Search,yes,71,29,29,0.42
-2025-11-18T12:38:29,maze_4_branching,Dijkstra's Search,yes,399,29,29,2.65
-2025-11-18T12:38:32,maze_4_branching,Greedy Best First Search,yes,40,37,37,0.19
-2025-11-18T12:38:36,maze_4_branching,Breadth First Search,yes,396,29,29,1.53
-2025-11-18T12:38:45,maze_4_branching,Depth First Search,yes,877,67,67,8.30
-2025-11-18T12:38:47,maze_3_spiral,A* Search,yes,39,27,27,0.20
-2025-11-18T12:38:51,maze_3_spiral,Dijkstra's Search,yes,364,27,27,2.57
-2025-11-18T12:38:54,maze_3_spiral,Greedy Best First Search,yes,35,27,27,0.17
-2025-11-18T12:38:58,maze_3_spiral,Breadth First Search,yes,369,27,27,1.32
-2025-11-18T12:39:01,maze_3_spiral,Depth First Search,yes,33,27,27,0.13
-2025-11-18T12:39:03,maze_2_complex_deadends,A* Search,no,62,0,0,0.30
-2025-11-18T12:39:05,maze_2_complex_deadends,Dijkstra's Search,no,62,0,0,0.24
-2025-11-18T12:39:06,maze_2_complex_deadends,Greedy Best First Search,no,62,0,0,0.27
-2025-11-18T12:39:08,maze_2_complex_deadends,Breadth First Search,no,62,0,0,0.23
-2025-11-18T12:39:10,maze_2_complex_deadends,Depth First Search,no,62,0,0,0.10
-2025-11-18T12:39:13,maze_1_simple_corridors,A* Search,yes,34,25,25,0.24
-2025-11-18T12:39:17,maze_1_simple_corridors,Dijkstra's Search,yes,407,25,25,2.71
-2025-11-18T12:39:20,maze_1_simple_corridors,Greedy Best First Search,yes,27,27,27,0.18
-2025-11-18T12:39:24,maze_1_simple_corridors,Breadth First Search,yes,407,25,25,1.76
-2025-11-18T12:39:29,maze_1_simple_corridors,Depth First Search,yes,611,25,25,5.51
-2025-11-18T12:39:34,dense_5_checkerboard,A* Search,yes,187,51,51,1.03
-2025-11-18T12:39:40,dense_5_checkerboard,Dijkstra's Search,yes,663,51,51,5.76
-2025-11-18T12:39:44,dense_5_checkerboard,Greedy Best First Search,yes,90,53,53,0.38
-2025-11-18T12:39:50,dense_5_checkerboard,Breadth First Search,yes,668,51,51,1.29
-2025-11-18T12:39:56,dense_5_checkerboard,Depth First Search,yes,141,129,129,0.58
-2025-11-18T12:39:58,dense_4_random_45pct,A* Search,no,39,0,0,0.16
-2025-11-18T12:40:00,dense_4_random_45pct,Dijkstra's Search,no,39,0,0,0.17
-2025-11-18T12:40:01,dense_4_random_45pct,Greedy Best First Search,no,39,0,0,0.16
-2025-11-18T12:40:03,dense_4_random_45pct,Breadth First Search,no,39,0,0,0.12
-2025-11-18T12:40:05,dense_4_random_45pct,Depth First Search,no,39,0,0,0.12
-2025-11-18T12:40:08,dense_3_interlaced_bands,A* Search,yes,87,31,31,0.50
-2025-11-18T12:40:14,dense_3_interlaced_bands,Dijkstra's Search,yes,693,31,31,6.46
-2025-11-18T12:40:17,dense_3_interlaced_bands,Greedy Best First Search,yes,38,31,31,0.19
-2025-11-18T12:40:23,dense_3_interlaced_bands,Breadth First Search,yes,697,31,31,3.36
-2025-11-18T12:40:29,dense_3_interlaced_bands,Depth First Search,yes,166,141,141,1.89
-2025-11-18T12:40:32,dense_2_dense_clusters,A* Search,yes,23,23,23,0.19
-2025-11-18T12:40:37,dense_2_dense_clusters,Dijkstra's Search,yes,670,23,23,5.45
-2025-11-18T12:40:40,dense_2_dense_clusters,Greedy Best First Search,yes,23,23,23,0.15
-2025-11-18T12:40:46,dense_2_dense_clusters,Breadth First Search,yes,684,23,23,4.05
-2025-11-18T12:40:48,dense_2_dense_clusters,Depth First Search,yes,23,23,23,0.13
-2025-11-18T12:40:50,dense_1_random_40pct,A* Search,no,168,0,0,0.71
-2025-11-18T12:40:53,dense_1_random_40pct,Dijkstra's Search,no,168,0,0,0.73
-2025-11-18T12:40:55,dense_1_random_40pct,Greedy Best First Search,no,168,0,0,0.39
-2025-11-18T12:40:58,dense_1_random_40pct,Breadth First Search,no,168,0,0,0.46
-2025-11-18T12:41:00,dense_1_random_40pct,Depth First Search,no,168,0,0,0.56
+2025-11-18T13:19:13,weighted_5_highcost_barrier,A* Search,yes,137,23,45,0.63
+2025-11-18T13:19:17,weighted_5_highcost_barrier,Dijkstra's Search,yes,322,23,45,1.00
+2025-11-18T13:19:20,weighted_5_highcost_barrier,Greedy Best First Search,yes,23,23,45,0.07
+2025-11-18T13:19:26,weighted_5_highcost_barrier,Breadth First Search,yes,755,23,45,2.32
+2025-11-18T13:19:28,weighted_5_highcost_barrier,Depth First Search,yes,23,23,45,0.09
+2025-11-18T13:19:33,weighted_4_mixed,A* Search,yes,491,33,62,2.05
+2025-11-18T13:19:40,weighted_4_mixed,Dijkstra's Search,yes,748,33,62,3.49
+2025-11-18T13:19:43,weighted_4_mixed,Greedy Best First Search,yes,37,29,74,0.10
+2025-11-18T13:19:48,weighted_4_mixed,Breadth First Search,yes,672,29,89,1.67
+2025-11-18T13:19:58,weighted_4_mixed,Depth First Search,yes,390,195,604,2.42
+2025-11-18T13:20:02,weighted_3_regional,A* Search,yes,395,29,56,1.57
+2025-11-18T13:20:09,weighted_3_regional,Dijkstra's Search,yes,829,29,56,4.09
+2025-11-18T13:20:11,weighted_3_regional,Greedy Best First Search,yes,23,23,69,0.08
+2025-11-18T13:20:18,weighted_3_regional,Breadth First Search,yes,762,23,69,2.42
+2025-11-18T13:20:20,weighted_3_regional,Depth First Search,yes,23,23,69,0.10
+2025-11-18T13:20:26,weighted_2_gradient,A* Search,yes,675,27,61,3.35
+2025-11-18T13:20:33,weighted_2_gradient,Dijkstra's Search,yes,936,27,61,4.99
+2025-11-18T13:20:36,weighted_2_gradient,Greedy Best First Search,yes,23,23,71,0.08
+2025-11-18T13:20:42,weighted_2_gradient,Breadth First Search,yes,762,23,71,2.39
+2025-11-18T13:20:44,weighted_2_gradient,Depth First Search,yes,23,23,71,0.10
+2025-11-18T13:20:48,weighted_1_random,A* Search,yes,228,29,41,0.75
+2025-11-18T13:20:54,weighted_1_random,Dijkstra's Search,yes,839,29,41,4.26
+2025-11-18T13:20:57,weighted_1_random,Greedy Best First Search,yes,23,23,67,0.08
+2025-11-18T13:21:03,weighted_1_random,Breadth First Search,yes,762,23,67,2.47
+2025-11-18T13:21:06,weighted_1_random,Depth First Search,yes,23,23,67,0.10
+2025-11-18T13:21:08,sparse_5_wide_spread,A* Search,yes,23,23,23,0.10
+2025-11-18T13:21:14,sparse_5_wide_spread,Dijkstra's Search,yes,729,23,23,4.26
+2025-11-18T13:21:16,sparse_5_wide_spread,Greedy Best First Search,yes,23,23,23,0.09
+2025-11-18T13:21:22,sparse_5_wide_spread,Breadth First Search,yes,743,23,23,2.84
+2025-11-18T13:21:25,sparse_5_wide_spread,Depth First Search,yes,23,23,23,0.11
+2025-11-18T13:21:27,sparse_4_large_blocks,A* Search,yes,23,23,23,0.12
+2025-11-18T13:21:33,sparse_4_large_blocks,Dijkstra's Search,yes,716,23,23,4.02
+2025-11-18T13:21:36,sparse_4_large_blocks,Greedy Best First Search,yes,23,23,23,0.11
+2025-11-18T13:21:42,sparse_4_large_blocks,Breadth First Search,yes,730,23,23,2.69
+2025-11-18T13:21:44,sparse_4_large_blocks,Depth First Search,yes,23,23,23,0.13
+2025-11-18T13:21:47,sparse_3_short_walls,A* Search,yes,23,23,23,0.14
+2025-11-18T13:21:53,sparse_3_short_walls,Dijkstra's Search,yes,720,23,23,4.03
+2025-11-18T13:21:55,sparse_3_short_walls,Greedy Best First Search,yes,23,23,23,0.11
+2025-11-18T13:22:01,sparse_3_short_walls,Breadth First Search,yes,734,23,23,2.75
+2025-11-18T13:22:03,sparse_3_short_walls,Depth First Search,yes,23,23,23,0.13
+2025-11-18T13:22:06,sparse_2_clusters,A* Search,yes,23,23,23,0.13
+2025-11-18T13:22:12,sparse_2_clusters,Dijkstra's Search,yes,740,23,23,4.22
+2025-11-18T13:22:14,sparse_2_clusters,Greedy Best First Search,yes,23,23,23,0.09
+2025-11-18T13:22:21,sparse_2_clusters,Breadth First Search,yes,754,23,23,2.94
+2025-11-18T13:22:23,sparse_2_clusters,Depth First Search,yes,23,23,23,0.12
+2025-11-18T13:22:26,sparse_1_scattered,A* Search,yes,25,25,25,0.12
+2025-11-18T13:22:32,sparse_1_scattered,Dijkstra's Search,yes,791,25,25,4.73
+2025-11-18T13:22:34,sparse_1_scattered,Greedy Best First Search,yes,25,25,25,0.11
+2025-11-18T13:22:41,sparse_1_scattered,Breadth First Search,yes,803,25,25,2.94
+2025-11-18T13:22:50,sparse_1_scattered,Depth First Search,yes,510,157,157,6.89
+2025-11-18T13:22:56,maze_5_recursive_division,A* Search,yes,444,93,93,2.07
+2025-11-18T13:23:04,maze_5_recursive_division,Dijkstra's Search,yes,544,93,93,2.42
+2025-11-18T13:23:10,maze_5_recursive_division,Greedy Best First Search,yes,255,101,101,0.93
+2025-11-18T13:23:17,maze_5_recursive_division,Breadth First Search,yes,544,93,93,0.94
+2025-11-18T13:23:27,maze_5_recursive_division,Depth First Search,yes,502,217,217,2.34
+2025-11-18T13:23:30,maze_4_branching,A* Search,yes,71,29,29,0.27
+2025-11-18T13:23:35,maze_4_branching,Dijkstra's Search,yes,399,29,29,1.63
+2025-11-18T13:23:38,maze_4_branching,Greedy Best First Search,yes,40,37,37,0.13
+2025-11-18T13:23:42,maze_4_branching,Breadth First Search,yes,396,29,29,0.97
+2025-11-18T13:23:50,maze_4_branching,Depth First Search,yes,877,67,67,5.71
+2025-11-18T13:23:53,maze_3_spiral,A* Search,yes,39,27,27,0.13
+2025-11-18T13:23:57,maze_3_spiral,Dijkstra's Search,yes,364,27,27,1.38
+2025-11-18T13:24:00,maze_3_spiral,Greedy Best First Search,yes,35,27,27,0.10
+2025-11-18T13:24:04,maze_3_spiral,Breadth First Search,yes,369,27,27,0.81
+2025-11-18T13:24:07,maze_3_spiral,Depth First Search,yes,33,27,27,0.09
+2025-11-18T13:24:09,maze_2_complex_deadends,A* Search,no,62,0,0,0.19
+2025-11-18T13:24:10,maze_2_complex_deadends,Dijkstra's Search,no,62,0,0,0.15
+2025-11-18T13:24:12,maze_2_complex_deadends,Greedy Best First Search,no,62,0,0,0.18
+2025-11-18T13:24:14,maze_2_complex_deadends,Breadth First Search,no,62,0,0,0.13
+2025-11-18T13:24:16,maze_2_complex_deadends,Depth First Search,no,62,0,0,0.13
+2025-11-18T13:24:19,maze_1_simple_corridors,A* Search,yes,34,25,25,0.16
+2025-11-18T13:24:23,maze_1_simple_corridors,Dijkstra's Search,yes,407,25,25,1.75
+2025-11-18T13:24:26,maze_1_simple_corridors,Greedy Best First Search,yes,27,27,27,0.11
+2025-11-18T13:24:30,maze_1_simple_corridors,Breadth First Search,yes,407,25,25,1.12
+2025-11-18T13:24:36,maze_1_simple_corridors,Depth First Search,yes,611,25,25,3.76
+2025-11-18T13:24:40,dense_5_checkerboard,A* Search,yes,187,51,51,0.64
+2025-11-18T13:24:46,dense_5_checkerboard,Dijkstra's Search,yes,663,51,51,3.42
+2025-11-18T13:24:50,dense_5_checkerboard,Greedy Best First Search,yes,90,53,53,0.23
+2025-11-18T13:24:56,dense_5_checkerboard,Breadth First Search,yes,668,51,51,1.35
+2025-11-18T13:25:03,dense_5_checkerboard,Depth First Search,yes,141,129,129,0.37
+2025-11-18T13:25:04,dense_4_random_45pct,A* Search,no,39,0,0,0.10
+2025-11-18T13:25:06,dense_4_random_45pct,Dijkstra's Search,no,39,0,0,0.09
+2025-11-18T13:25:08,dense_4_random_45pct,Greedy Best First Search,no,39,0,0,0.10
+2025-11-18T13:25:10,dense_4_random_45pct,Breadth First Search,no,39,0,0,0.08
+2025-11-18T13:25:11,dense_4_random_45pct,Depth First Search,no,39,0,0,0.08
+2025-11-18T13:25:14,dense_3_interlaced_bands,A* Search,yes,87,31,31,0.32
+2025-11-18T13:25:20,dense_3_interlaced_bands,Dijkstra's Search,yes,693,31,31,3.78
+2025-11-18T13:25:23,dense_3_interlaced_bands,Greedy Best First Search,yes,38,31,31,0.12
+2025-11-18T13:25:29,dense_3_interlaced_bands,Breadth First Search,yes,697,31,31,1.77
+2025-11-18T13:25:36,dense_3_interlaced_bands,Depth First Search,yes,166,141,141,1.02
+2025-11-18T13:25:38,dense_2_dense_clusters,A* Search,yes,23,23,23,0.13
+2025-11-18T13:25:44,dense_2_dense_clusters,Dijkstra's Search,yes,670,23,23,3.60
+2025-11-18T13:25:46,dense_2_dense_clusters,Greedy Best First Search,yes,23,23,23,0.11
+2025-11-18T13:25:52,dense_2_dense_clusters,Breadth First Search,yes,684,23,23,2.72
+2025-11-18T13:25:55,dense_2_dense_clusters,Depth First Search,yes,23,23,23,0.13
+2025-11-18T13:25:57,dense_1_random_40pct,A* Search,no,168,0,0,0.50
+2025-11-18T13:25:59,dense_1_random_40pct,Dijkstra's Search,no,168,0,0,0.43
+2025-11-18T13:26:02,dense_1_random_40pct,Greedy Best First Search,no,168,0,0,0.47
+2025-11-18T13:26:04,dense_1_random_40pct,Breadth First Search,no,168,0,0,0.25
+2025-11-18T13:26:07,dense_1_random_40pct,Depth First Search,no,168,0,0,0.35

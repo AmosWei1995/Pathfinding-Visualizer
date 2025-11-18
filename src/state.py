@@ -11,6 +11,7 @@ class State:
     done_visualising: bool
     need_update: bool
     results: dict[str, dict[str, float]]
+    run_all_mode: str = "saved"  # "saved" or "current"
     run_all_saved_maps = False
     saved_map_total = 0
     completed_saved_maps = 0
