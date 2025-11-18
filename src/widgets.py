@@ -52,6 +52,7 @@ class Button(Widget):
         self.outline = outline
         self.foreground_color = foreground_color
         self.background_color = background_color
+        self.line_spacing = 4
 
         # Render text
         if bold:
@@ -61,12 +62,23 @@ class Button(Widget):
             font = pygame.font.Font(
                 "assets/fonts/Montserrat-Regular.ttf", font_size)
 
-        self.text_surf = font.render(
-            self.text, True, foreground_color
-        )
+        lines = self.text.split("\n") if self.text else [""]
+        self.text_surfs = []
+        text_height = 0
+        text_width = 0
 
-        # Get Rect object out of the text surface
-        self.text_rect = self.text_surf.get_rect()
+        for line in lines:
+            surf = font.render(line, True, foreground_color)
+            self.text_surfs.append(surf)
+            rect = surf.get_rect()
+            text_width = max(text_width, rect.width)
+            text_height += rect.height
+
+        if len(self.text_surfs) > 1:
+            text_height += self.line_spacing * (len(self.text_surfs) - 1)
+
+        self.text_surf = self.text_surfs[0] if self.text_surfs else font.render("", True, foreground_color)
+        self.text_rect = pygame.Rect(0, 0, text_width, text_height)
 
         # Translate params: x and y if they are strings
         self.width = self.text_rect.width + padding * 2
@@ -118,8 +130,11 @@ class Button(Widget):
             pygame.draw.rect(self.screen, BLACK,
                              self.rect, width=self.outline)
 
-        text_x, text_y = self.rect.x + self.padding, self.rect.y + self.padding
-        self.screen.blit(self.text_surf, (text_x, text_y))
+        text_x = self.rect.x + self.padding
+        text_y = self.rect.y + self.padding
+        for surf in self.text_surfs:
+            self.screen.blit(surf, (text_x, text_y))
+            text_y += surf.get_height() + self.line_spacing
 
         return action
 
@@ -143,8 +158,11 @@ class Label(Button):
                              self.rect, width=self.outline)
 
         # Render text
-        text_x, text_y = self.rect.x + self.padding, self.rect.y + self.padding
-        self.screen.blit(self.text_surf, (text_x, text_y))
+        text_x = self.rect.x + self.padding
+        text_y = self.rect.y + self.padding
+        for surf in self.text_surfs:
+            self.screen.blit(surf, (text_x, text_y))
+            text_y += surf.get_height() + self.line_spacing
 
 
 class Menu(Widget):

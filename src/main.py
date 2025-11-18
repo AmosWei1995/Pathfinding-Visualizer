@@ -1,4 +1,8 @@
+import csv
 import sys
+from datetime import datetime
+from pathlib import Path
+
 import pygame
 
 from .state import State
@@ -36,6 +40,10 @@ from .constants import (
     FPS,
     YELLOW
 )
+
+# Paths for saving run results
+BASE_DIR = Path(__file__).resolve().parent.parent
+RESULTS_FILE = BASE_DIR / "run_results.csv"
 
 # Initialize PyGame
 pygame.init()
@@ -310,7 +318,7 @@ save_map_btn = Button(
     padding=6, font_size=18, outline=False,
     surface=WINDOW,
 )
-save_map_btn.rect.top = top.bottom + 10
+save_map_btn.rect.top = top.bottom + 60
 save_map_btn.rect.right = WIDTH - 20
 
 # Button instance for Load Map button
@@ -321,13 +329,57 @@ load_map_btn = Button(
     padding=6, font_size=18, outline=False,
     surface=WINDOW,
 )
-load_map_btn.rect.top = top.bottom + 10
+load_map_btn.rect.top = top.bottom + 60
 load_map_btn.rect.right = save_map_btn.rect.left - 10
 
 # Load map menu (will be created dynamically)
 load_map_menu = None
 load_map_btn_was_pressed = False  # Track button state to prevent multiple clicks
 load_map_scroll_offset = 0  # Track scroll position for menu
+
+
+def save_run_result(algo_name: str, solution, map_name: str | None) -> None:
+    """Append the current run result to a CSV file."""
+    steps = max(solution.explored_length - 1, 0)
+    path_length = max(solution.path_length - 1, 0)
+    path_cost = solution.path_cost if solution.path_cost else path_length
+    path_found = "yes" if solution.path_length > 0 else "no"
+    timestamp = datetime.now().isoformat(timespec="seconds")
+    map_name = map_name or "unspecified"
+
+    RESULTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    file_exists = RESULTS_FILE.exists()
+    needs_header = not file_exists
+    if file_exists:
+        try:
+            needs_header = RESULTS_FILE.stat().st_size == 0
+        except OSError:
+            needs_header = True
+
+    with RESULTS_FILE.open("a", newline="", encoding="utf-8") as csvfile:
+        writer = csv.writer(csvfile)
+        if needs_header:
+            writer.writerow([
+                "timestamp",
+                "map_name",
+                "algorithm",
+                "path_found",
+                "steps_explored",
+                "path_length",
+                "path_cost",
+                "time_ms",
+            ])
+
+        writer.writerow([
+            timestamp,
+            map_name,
+            algo_name,
+            path_found,
+            steps,
+            path_length,
+            path_cost,
+            f"{solution.time:.2f}",
+        ])
 
 
 def create_load_map_menu():
@@ -686,11 +738,16 @@ def draw() -> None:
         "Target Node": WHITE,
     }
 
+    # Calculate max x position to avoid overlapping with buttons
+    # Reserve space for buttons on the right (load_map_btn and save_map_btn)
+    max_x = load_map_btn.rect.left - 30  # Leave 30px margin before buttons
+    
     x = 50
     y = top.bottom + 20
-    for text in texts:
+    text_items = list(texts.items())
+    for i, (text, color) in enumerate(text_items):
         # Rectangle (Symbol)
-        pygame.draw.rect(WINDOW, texts[text], (x, y, 30, 30))
+        pygame.draw.rect(WINDOW, color, (x, y, 30, 30))
         pygame.draw.rect(WINDOW, GRAY, (x, y, 30, 30), width=1)
 
         # Text (Meaning)
@@ -700,17 +757,42 @@ def draw() -> None:
 
         WINDOW.blit(text_surf, (x + 30 + 10, text_rect.y))
 
+        # Calculate current item's right edge
+        current_right = x + 30 + 10 + text_surf.get_width()
+        
         # Formating
-        if texts[text] == DARK:
+        if color == DARK:
             y += text_surf.get_height() + 30
-        elif text != "Weighted Node":
-            x += 30 + 10 + text_surf.get_width() + 75
-
-        # Draw images for weighted, start and target node
-        if text == "Weighted Node":
+            x = 50  # Reset x for new row
+        elif text == "Weighted Node":
+            # Weighted Node always goes to next row
             WINDOW.blit(WEIGHT, (x + 3, y + 3))
+            y += text_surf.get_height() + 30
             x = 50
-        elif text == "Start Node":
+        else:
+            # Calculate next x position
+            next_x = current_right + 75
+            # Check if there's a next item and if it would fit
+            if i + 1 < len(text_items):
+                next_text, next_color = text_items[i + 1]
+                # Skip check if next item is Weighted Node (it always goes to new row)
+                # or Wall Node (it always goes to new row)
+                if next_text == "Weighted Node" or next_color == DARK:
+                    x = next_x
+                else:
+                    next_text_surf = FONT_18.render(next_text, True, DARK)
+                    estimated_next_width = 30 + 10 + next_text_surf.get_width()
+                    # If next item would exceed max_x, move to next row
+                    if next_x + estimated_next_width > max_x:
+                        y += text_surf.get_height() + 30
+                        x = 50
+                    else:
+                        x = next_x
+            else:
+                x = next_x
+
+        # Draw images for start and target node
+        if text == "Start Node":
             image_rect = START.get_rect(center=(65, top.bottom + 35))
             WINDOW.blit(START, image_rect)
         elif text == "Target Node":
@@ -824,13 +906,7 @@ def draw() -> None:
             and not animator.animating:
         state.overlay = True
 
-        if comapre_menu.selected \
-                and comapre_menu.selected.text == "Current Maze":
-            state.results = {}
-            run_all(0)
-        elif comapre_menu.selected \
-                and comapre_menu.selected.text == "Different Mazes":
-            state.run_all_mazes = True
+        if comapre_menu.selected:
             state.results = {}
             run_all(0)
 
@@ -939,9 +1015,14 @@ def run_single(idx: int) -> None:
 
     def callback():
         state.done_visualising = True
+        path_cost = solution.path_cost if solution.path_cost else max(solution.path_length - 1, 0)
+        path_found = "Yes" if solution.path_length > 0 else "No"
         state.label = Label(
-            f"{text} took {solution.explored_length} steps in "
-            f"{solution.time:.2f}ms", "center", 0,
+            f"{text} took {solution.explored_length-1} steps,\n"
+            f"path length {solution.path_length-1},\n"
+            f"path cost {path_cost},\n"
+            f"path found {path_found},\n"
+            f"time taken {solution.time:.2f}ms", "center", 0,
             background_color=pygame.Color(*WHITE),
             foreground_color=pygame.Color(*DARK),
             padding=6, font_size=20, outline=False,
@@ -949,6 +1030,7 @@ def run_single(idx: int) -> None:
         )
         state.label.rect.bottom = HEADER_HEIGHT - 10
         state.overlay = False
+        save_run_result(text, solution, getattr(maze, "current_map_name", None))
 
     maze.visualize(solution=solution, after_animation=callback)
 
@@ -962,87 +1044,102 @@ def run_single(idx: int) -> None:
     state.label.rect.bottom = HEADER_HEIGHT - 10
 
 
-def run_all(algo_idx: int, maze_idx: int = -1) -> None:
-    """Run all the algorithms on current or all mazes
-
-    Args:
-        algo_idx (int): Algorithm index
-        maze_idx (int, optional): Maze index. Defaults to -1.
-    """
-    maze.clear_visited()
-    text = algo_menu.children[algo_idx].text
-
-    def callback():
-        if algo_idx + 1 < len(algo_menu.children):
-            run_all(algo_idx + 1, maze_idx)
-        elif state.run_all_mazes \
-                and maze_idx + 1 < len(generate_menu.children):
-            maze.clear_board()
-
-            def after_generation():
-                run_all(0, maze_idx + 1)
-
-            maze.generate_maze(
-                algorithm=generate_menu.children[maze_idx + 1].text,
-                after_generation=after_generation
-            )
-
-            algorithm = generate_menu.children[maze_idx + 1].text
-
-            if "Weight" in algorithm:
-                new_text = "Generating basic weight maze"
-            elif "Basic Random" in algorithm:
-                new_text = "Generating maze randomly"
-            else:
-                new_text = f"Generating maze using {algorithm}"
-
+def run_all(
+    algo_idx: int,
+    map_idx: int = 0,
+    saved_maps: list[str] | None = None
+) -> None:
+    """Run every algorithm on each saved map sequentially."""
+    if saved_maps is None:
+        saved_maps = Maze.get_saved_maps()
+        if not saved_maps:
             state.label = Label(
-                new_text, "center", 0,
+                "No saved maps found", "center", 0,
                 background_color=pygame.Color(*WHITE),
                 foreground_color=pygame.Color(*DARK),
                 padding=6, font_size=20, outline=False,
                 surface=WINDOW,
             )
             state.label.rect.bottom = HEADER_HEIGHT - 10
-        else:
-            state.label = Label(
-                text, "center", 0,
-                background_color=pygame.Color(*WHITE),
-                foreground_color=pygame.Color(*DARK),
-                padding=6, font_size=20, outline=False,
-                surface=WINDOW,
-            )
-            state.label.rect.bottom = HEADER_HEIGHT - 10
+            state.overlay = False
+            return
 
-            results = list(state.results.items())
+        state.results = {}
+        state.run_all_saved_maps = True
+        state.saved_map_total = len(saved_maps)
+        state.completed_saved_maps = 0
 
-            if state.run_all_mazes:
-                for result in results:
-                    result[1]["path_length"] //= maze_idx + 2
-                    result[1]["path_cost"] //= maze_idx + 2
-                    result[1]["explored_length"] //= maze_idx + 2
-                    result[1]["time"] /= maze_idx + 2
+    if map_idx >= len(saved_maps):
+        map_count = max(state.completed_saved_maps, 1)
+        results = list(state.results.items())
+
+        if results:
+            for _, stats in results:
+                stats["explored_length"] //= map_count
+                stats["path_length"] //= map_count
+                stats["path_cost"] //= map_count
+                stats["time"] /= map_count
 
             results.sort(key=lambda item: item[1]["time"])
-
             show_results(results)
-            state.run_all_mazes = False
-            state.overlay = False
+        else:
+            state.label = Label(
+                "No runs were completed", "center", 0,
+                background_color=pygame.Color(*WHITE),
+                foreground_color=pygame.Color(*DARK),
+                padding=6, font_size=20, outline=False,
+                surface=WINDOW,
+            )
+            state.label.rect.bottom = HEADER_HEIGHT - 10
+
+        state.run_all_saved_maps = False
+        state.overlay = False
+        return
+
+    current_map = saved_maps[map_idx]
+    filepath = f"maps/{current_map}"
+
+    if algo_idx == 0:
+        if not maze.load_map(filepath):
+            print(f"Failed to load map: {filepath}")
+            run_all(0, map_idx + 1, saved_maps)
+            return
+
+        state.completed_saved_maps += 1
+        maze.clear_visited()
+
+    maze.clear_visited()
+    text = algo_menu.children[algo_idx].text
+    display_map = current_map.replace(".json", "")
+
+    def callback():
+        save_run_result(text, solution, getattr(maze, "current_map_name", None))
+        if algo_idx + 1 < len(algo_menu.children):
+            run_all(algo_idx + 1, map_idx, saved_maps)
+        else:
+            run_all(0, map_idx + 1, saved_maps)
 
     solution = maze.solve(text)
 
+    summary = {
+        "explored_length": solution.explored_length,
+        "path_length": solution.path_length,
+        "path_cost": solution.path_cost if solution.path_cost else solution.path_length,
+        "time": solution.time,
+    }
+
     if text not in state.results:
-        state.results[text] = vars(solution)
+        state.results[text] = summary
     else:
-        state.results[text]["explored_length"] += solution.explored_length
-        state.results[text]["path_length"] += solution.path_length
-        state.results[text]["path_cost"] += solution.path_cost
-        state.results[text]["time"] += solution.time
+        state.results[text]["explored_length"] += summary["explored_length"]
+        state.results[text]["path_length"] += summary["path_length"]
+        state.results[text]["path_cost"] += summary["path_cost"]
+        state.results[text]["time"] += summary["time"]
 
     maze.visualize(solution=solution, after_animation=callback)
 
     state.label = Label(
-        f"Running {text}", "center", 0,
+        f"Running {text} on {display_map}", "center", 0,
         background_color=pygame.Color(*WHITE),
         foreground_color=pygame.Color(*DARK),
         padding=6, font_size=20, outline=False,
