@@ -434,7 +434,7 @@ def create_load_map_menu():
 
     load_menu_children = []
 
-    # Create menu items for visible maps only
+    # Create menu items for visible maps
     for i, map_file in enumerate(visible_maps):
         load_menu_children.append(
             Button(
@@ -450,23 +450,6 @@ def create_load_map_menu():
             )
         )
 
-    # Add scroll indicator if there are more items than can be displayed
-    if len(saved_maps) > max_visible_items:
-        indicator_text = f"↕ {start_idx + 1}-{end_idx} of {len(saved_maps)}"
-        load_menu_children.append(
-            Button(
-                surface=WINDOW,
-                text=indicator_text,
-                x=load_map_btn.rect.x - 40,
-                y=load_map_btn.rect.bottom + len(visible_maps) * item_height,
-                background_color=pygame.Color(*GRAY),
-                foreground_color=pygame.Color(*DARK),
-                padding=2,
-                font_size=11,
-                outline=False
-            )
-        )
-
     return Menu(
         surface=WINDOW,
         button=load_map_btn,
@@ -477,7 +460,7 @@ def create_load_map_menu():
 def main() -> None:
     """Start here"""
     global load_map_menu, load_map_btn_was_pressed, load_map_scroll_offset
-    
+
     state.label = Label(
         "Choose an algorithm", "center", 0,
         background_color=pygame.Color(*WHITE),

@@ -201,20 +201,40 @@ class Maze:
     def clear_visited(self) -> None:
         """Clear visited nodes
         """
+        # Save current start and goal positions
+        current_start = self.start
+        current_goal = self.goal
+
         for rowIdx in range(self.height):
             for colIdx in range(self.width):
+                pos = (rowIdx, colIdx)
                 node = self.maze[rowIdx][colIdx]
+
+                # If this position is the current start or goal, skip processing
+                if pos == current_start or pos == current_goal:
+                    continue
+
+                # For other positions, clear visited/path markers and
+                # reset old start/goal markers to empty cells
+                if node.value in ("V", "*"):
+                    new_value = str(node.cost)
+                elif node.value in ("A", "B"):
+                    # Old start/goal position - clear it
+                    new_value = "1"
+                else:
+                    new_value = node.value
+
                 self.maze[rowIdx][colIdx] = MazeNode(
-                    str(node.cost) if node.value in ("V", "*") else node.value,
+                    new_value,
                     (rowIdx, colIdx),
-                    node.cost
+                    node.cost if new_value not in ("A", "B", "#") else (0 if new_value == "A" else (1 if new_value == "B" else -1))
                 )
 
-                self.set_cell((rowIdx, colIdx),
-                              self.maze[rowIdx][colIdx].value)
+                self.set_cell(pos, new_value)
 
-        self.set_cell(self.start, "A", forced=True)
-        self.set_cell(self.goal, "B", forced=True)
+        # Ensure current start and goal are properly set
+        self.set_cell(current_start, "A", forced=True)
+        self.set_cell(current_goal, "B", forced=True)
 
     def mouse_within_bounds(self, pos: tuple[int, int]) -> bool:
         """Check if mouse cursor is inside the maze
